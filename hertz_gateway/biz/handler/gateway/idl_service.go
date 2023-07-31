@@ -4,9 +4,9 @@ package gateway
 
 import (
 	"context"
-
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
+	idlmanager "hertz.demo/biz/idl"
 	gateway "hertz.demo/biz/model/gateway"
 )
 
@@ -22,7 +22,12 @@ func AddService(ctx context.Context, c *app.RequestContext) {
 	}
 
 	resp := new(gateway.SuccessResp)
+	idlmanager.AddService(req)
 
+	resp = &gateway.SuccessResp{
+		Success: true,
+		Message: "Add " + req.ServiceName + " success",
+	}
 	c.JSON(consts.StatusOK, resp)
 }
 
@@ -38,7 +43,12 @@ func DeleteService(ctx context.Context, c *app.RequestContext) {
 	}
 
 	resp := new(gateway.SuccessResp)
+	idlmanager.DeleteService(req.ServiceName)
 
+	resp = &gateway.SuccessResp{
+		Success: true,
+		Message: "Delete " + req.ServiceName + " success",
+	}
 	c.JSON(consts.StatusOK, resp)
 }
 
@@ -54,6 +64,13 @@ func UpdateService(ctx context.Context, c *app.RequestContext) {
 	}
 
 	resp := new(gateway.SuccessResp)
+
+	idlmanager.UpdateService(req)
+
+	resp = &gateway.SuccessResp{
+		Success: true,
+		Message: "Update " + req.ServiceName + " success",
+	}
 
 	c.JSON(consts.StatusOK, resp)
 }
@@ -71,6 +88,8 @@ func GetService(ctx context.Context, c *app.RequestContext) {
 
 	resp := new(gateway.Service)
 
+	resp = idlmanager.GetService(req.ServiceName)
+
 	c.JSON(consts.StatusOK, resp)
 }
 
@@ -78,8 +97,14 @@ func GetService(ctx context.Context, c *app.RequestContext) {
 // @router /list-service [POST]
 func ListService(ctx context.Context, c *app.RequestContext) {
 	var err error
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
 
 	resp := new([]*gateway.Service)
+	services := idlmanager.GetAllService()
+	resp = &services
 
 	c.JSON(consts.StatusOK, resp)
 }
