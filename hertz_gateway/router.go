@@ -14,11 +14,6 @@ func customizedRegister(r *server.Hertz) {
 
 	// your code ...
 	r.POST("/gateway/:service/:method", handler.CallServiceMethod) //	func(ctx context.Context, c *app.RequestContext) {
-	//	service := c.Param("service")
-	//	method := c.Param("method")
-	//	message := service + "'s method: " + method
-	//	c.String(consts.StatusOK, message)
-	//}
 
 	routeInfo := r.Routes()
 	hlog.Info(routeInfo)
