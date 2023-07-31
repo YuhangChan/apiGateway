@@ -2,6 +2,7 @@ package idl
 
 import (
 	"github.com/cloudwego/kitex/pkg/generic"
+	"os"
 	"sync"
 	"time"
 )
@@ -12,6 +13,7 @@ var cacheTime = make(map[*generic.ThriftContentProvider]time.Time)
 func GetResolvedIdl(serviceName string) (*generic.ThriftContentProvider, error) {
 	// 动态解析
 	path := GetIdlPath(serviceName)
+	// resolve the idl file's path
 	content := GetIdlContent(serviceName)
 	includes := map[string]string{
 		path: content,
@@ -56,4 +58,29 @@ func GetCacheIdl(serviceName string) (*generic.ThriftContentProvider, error) {
 	idlCache.Store(serviceName, idl)
 
 	return idl, nil
+}
+
+func GetIdlPath(serviceName string) string {
+	service := GetService(serviceName)
+	return service.ServiceIdlName
+}
+
+func GetIdlContent(serviceName string) string {
+	service := GetService(serviceName)
+	ioMutex.Lock()
+	defer ioMutex.Unlock()
+
+	// 读取文件
+	file, err := os.Open(service.ServiceIdlName)
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+
+	content, err := os.ReadFile(service.ServiceIdlName)
+	if err != nil {
+		panic(err)
+	}
+	return string(content)
+
 }

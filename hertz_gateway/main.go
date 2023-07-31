@@ -9,7 +9,6 @@ import (
 )
 
 func main() {
-	// api layer?
 	h := server.Default()
 
 	h.Use(cors.New(cors.Config{
