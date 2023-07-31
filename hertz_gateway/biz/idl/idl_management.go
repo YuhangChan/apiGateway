@@ -36,6 +36,7 @@ func GetIdlContent(serviceName string) string {
 	ioMutex.Lock()
 	defer ioMutex.Unlock()
 
+	// 读取文件
 	file, err := os.Open(service.ServiceIdlName)
 	if err != nil {
 		panic(err)
@@ -50,7 +51,7 @@ func GetIdlContent(serviceName string) string {
 }
 
 func AddService(service gateway.Service) {
-	mapMutex.Lock() // 获取锁定
+	mapMutex.Lock()
 	defer mapMutex.Unlock()
 	if _, ok := ServiceNameMap[service.ServiceName]; !ok {
 		ServiceNameMap[service.ServiceName] = service
@@ -58,13 +59,13 @@ func AddService(service gateway.Service) {
 }
 
 func DeleteService(serviceName string) {
-	mapMutex.Lock() // 获取锁定
+	mapMutex.Lock()
 	defer mapMutex.Unlock()
 	delete(ServiceNameMap, serviceName)
 }
 
 func UpdateService(service gateway.Service) {
-	mapMutex.Lock() // 获取锁定
+	mapMutex.Lock()
 	defer mapMutex.Unlock()
 	if _, ok := ServiceNameMap[service.ServiceName]; ok {
 		ServiceNameMap[service.ServiceName] = service
@@ -72,8 +73,9 @@ func UpdateService(service gateway.Service) {
 }
 
 func GetAllService() []*gateway.Service {
+	// 返回所有的 service
 	var services []*gateway.Service
-	mapMutex.Lock() // 获取锁定
+	mapMutex.Lock()
 	defer mapMutex.Unlock()
 	for k := range ServiceNameMap {
 		service := ServiceNameMap[k]

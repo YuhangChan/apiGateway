@@ -9,7 +9,6 @@ import (
 	"net"
 )
 
-
 func initEtcd(handler *TeacherServiceImpl, addr *net.TCPAddr) server.Server {
 
 	r, err := etcd.NewEtcdRegistry([]string{"localhost:2379"})
@@ -28,24 +27,21 @@ func initEtcd(handler *TeacherServiceImpl, addr *net.TCPAddr) server.Server {
 }
 
 func main() {
-    addr, err := net.ResolveTCPAddr("tcp", :9997)
-    if err != nil {
-	    log.Println(err.Error())
-    }
-
-	r, err := etcd.etcd.NewEtcdRegistry([]string{"127.0.0.1:2379"})
+	addr, err := net.ResolveTCPAddr("tcp", ":9997")
 	if err != nil {
-	    log.Println(err.Error())
-    }
+		log.Println(err.Error())
+	}
 
-	
-
+	_, err = etcd.NewEtcdRegistry([]string{"127.0.0.1:2379"})
+	if err != nil {
+		log.Println(err.Error())
+	}
 
 	handler := new(TeacherServiceImpl)
 
 	svr := initEtcd(handler, addr)
 
-	err := svr.Run()
+	err = svr.Run()
 
 	if err != nil {
 		log.Println(err.Error())

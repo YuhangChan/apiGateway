@@ -6,7 +6,7 @@ import (
 	"context"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
-	idlmanager "hertz.demo/biz/idl"
+	idlManager "hertz.demo/biz/idl"
 	gateway "hertz.demo/biz/model/gateway"
 )
 
@@ -22,7 +22,7 @@ func AddService(ctx context.Context, c *app.RequestContext) {
 	}
 
 	resp := new(gateway.SuccessResp)
-	idlmanager.AddService(req)
+	idlManager.AddService(req)
 
 	resp = &gateway.SuccessResp{
 		Success: true,
@@ -43,7 +43,7 @@ func DeleteService(ctx context.Context, c *app.RequestContext) {
 	}
 
 	resp := new(gateway.SuccessResp)
-	idlmanager.DeleteService(req.ServiceName)
+	idlManager.DeleteService(req.ServiceName)
 
 	resp = &gateway.SuccessResp{
 		Success: true,
@@ -65,7 +65,7 @@ func UpdateService(ctx context.Context, c *app.RequestContext) {
 
 	resp := new(gateway.SuccessResp)
 
-	idlmanager.UpdateService(req)
+	idlManager.UpdateService(req)
 
 	resp = &gateway.SuccessResp{
 		Success: true,
@@ -88,7 +88,7 @@ func GetService(ctx context.Context, c *app.RequestContext) {
 
 	resp := new(gateway.Service)
 
-	resp = idlmanager.GetService(req.ServiceName)
+	resp = idlManager.GetService(req.ServiceName)
 
 	c.JSON(consts.StatusOK, resp)
 }
@@ -103,7 +103,7 @@ func ListService(ctx context.Context, c *app.RequestContext) {
 	}
 
 	resp := new([]*gateway.Service)
-	services := idlmanager.GetAllService()
+	services := idlManager.GetAllService()
 	resp = &services
 
 	c.JSON(consts.StatusOK, resp)
