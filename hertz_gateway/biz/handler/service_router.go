@@ -20,16 +20,16 @@ func CallServiceMethod(ctx context.Context, c *app.RequestContext) {
 
 	serviceName := c.Param("service")
 	methodName := c.Param("method")
-	fmt.Println("Call " + serviceName + "'s method: " + methodName)
+	fmt.Println("Calling the service: " + serviceName + "'s method: " + methodName)
 
-	// 将请求req参数转换为 JSON
+	// 将请求req参数转换为 JSON形式的数据
 	jsonReq, err := json.Marshal(req)
 	if err != nil {
 		fmt.Println("error:", err)
 	}
 	fmt.Println("jsonReq:", string(jsonReq))
 
-	// 获取对应service的客户端
+	// 通过本地再次生成的形式添加客户端，没有上传到 GitHub 获取对应service的客户端
 	cli, err := clientprovider.GetCacheClient(serviceName)
 
 	// 泛化调用
