@@ -4,6 +4,10 @@ package demo
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
+	client_provider "github.com/SchrodingerwithCat/apiGateway/http/biz/clientprovider"
+	"github.com/cloudwego/kitex/client/genericclient"
 
 	demo "github.com/SchrodingerwithCat/apiGateway/http/biz/model/demo"
 	"github.com/cloudwego/hertz/pkg/app"
@@ -11,18 +15,24 @@ import (
 )
 
 // TeacherRegister .
-// @router /teacher/add-student-info [POST]
+// @router /teacher/add-teacher-info [POST]
 func TeacherRegister(ctx context.Context, c *app.RequestContext) {
 	var err error
-	var req demo.Teacher
+	var req demo.Student
 	err = c.BindAndValidate(&req)
 	if err != nil {
 		c.String(consts.StatusBadRequest, err.Error())
 		return
 	}
 
-	resp := new(demo.RegisterResp)
+	jsonReq, err := json.Marshal(req)
 
+	if err != nil {
+		fmt.Println("error:", err)
+	}
+
+	cli := client_provider.GetTeacherGenericClient(&ctx, c).(genericclient.Client)
+	resp, err := cli.GenericCall(ctx, "TeacherRegister", string(jsonReq))
 	c.JSON(consts.StatusOK, resp)
 }
 
@@ -37,7 +47,13 @@ func TeacherQuery(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(demo.Student)
+	jsonReq, err := json.Marshal(req)
 
+	if err != nil {
+		fmt.Println("error:", err)
+	}
+
+	cli := client_provider.GetTeacherGenericClient(&ctx, c).(genericclient.Client)
+	resp, err := cli.GenericCall(ctx, "TeacherQuery", string(jsonReq))
 	c.JSON(consts.StatusOK, resp)
 }

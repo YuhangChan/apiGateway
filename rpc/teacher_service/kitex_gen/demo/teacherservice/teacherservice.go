@@ -92,7 +92,7 @@ func (p *kClient) TeacherRegister(ctx context.Context, teacher *demo.Teacher) (r
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) TeacherQuery(ctx context.Context, req *demo.QueryReq) (r *demo.Student, err error) {
+func (p *kClient) TeacherQuery(ctx context.Context, req *demo.QueryReq) (r *demo.Teacher, err error) {
 	var _args demo.TeacherServiceTeacherQueryArgs
 	_args.Req = req
 	var _result demo.TeacherServiceTeacherQueryResult

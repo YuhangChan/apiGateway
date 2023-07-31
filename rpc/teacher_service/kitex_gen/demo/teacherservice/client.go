@@ -12,7 +12,7 @@ import (
 // Client is designed to provide IDL-compatible methods with call-option parameter for kitex framework.
 type Client interface {
 	TeacherRegister(ctx context.Context, teacher *demo.Teacher, callOptions ...callopt.Option) (r *demo.RegisterResp, err error)
-	TeacherQuery(ctx context.Context, req *demo.QueryReq, callOptions ...callopt.Option) (r *demo.Student, err error)
+	TeacherQuery(ctx context.Context, req *demo.QueryReq, callOptions ...callopt.Option) (r *demo.Teacher, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -49,7 +49,7 @@ func (p *kTeacherServiceClient) TeacherRegister(ctx context.Context, teacher *de
 	return p.kClient.TeacherRegister(ctx, teacher)
 }
 
-func (p *kTeacherServiceClient) TeacherQuery(ctx context.Context, req *demo.QueryReq, callOptions ...callopt.Option) (r *demo.Student, err error) {
+func (p *kTeacherServiceClient) TeacherQuery(ctx context.Context, req *demo.QueryReq, callOptions ...callopt.Option) (r *demo.Teacher, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.TeacherQuery(ctx, req)
 }

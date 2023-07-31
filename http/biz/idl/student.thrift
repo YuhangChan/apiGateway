@@ -34,8 +34,3 @@ service StudentService {
     RegisterResp StuRegister(1: Student student)(api.post = '/student/add-student-info')
     Student StuQuery(1: QueryReq req)(api.get = '/student/query')
 }
-
-service TeacherService {
-    RegisterResp TeacherRegister(1: Teacher teacher)(api.post = '/teacher/add-teacher-info')
-    Teacher TeacherQuery(1: QueryReq req)(api.get = '/teacher/query')
-}

@@ -31,8 +31,8 @@ func StuRegister(ctx context.Context, c *app.RequestContext) {
 		fmt.Println("error:", err)
 	}
 
-	cli := client_provider.GetGenericClient(&ctx, c).(genericclient.Client)
-	resp, err := cli.GenericCall(ctx, "Register", string(jsonReq))
+	cli := client_provider.GetStuGenericClient(&ctx, c).(genericclient.Client)
+	resp, err := cli.GenericCall(ctx, "StuRegister", string(jsonReq))
 	c.JSON(consts.StatusOK, resp)
 }
 
@@ -53,7 +53,7 @@ func StuQuery(ctx context.Context, c *app.RequestContext) {
 		fmt.Println("error:", err)
 	}
 
-	cli := client_provider.GetGenericClient(&ctx, c).(genericclient.Client)
-	resp, err := cli.GenericCall(ctx, "Query", string(jsonReq))
+	cli := client_provider.GetStuGenericClient(&ctx, c).(genericclient.Client)
+	resp, err := cli.GenericCall(ctx, "StuQuery", string(jsonReq))
 	c.JSON(consts.StatusOK, resp)
 }

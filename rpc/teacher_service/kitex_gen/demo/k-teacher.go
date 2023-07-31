@@ -1634,7 +1634,7 @@ ReadStructEndError:
 func (p *TeacherServiceTeacherQueryResult) FastReadField0(buf []byte) (int, error) {
 	offset := 0
 
-	tmp := NewStudent()
+	tmp := NewTeacher()
 	if l, err := tmp.FastRead(buf[offset:]); err != nil {
 		return offset, err
 	} else {

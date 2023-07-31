@@ -24,7 +24,7 @@ func Register(r *server.Hertz) {
 	}
 	{
 		_teacher := root.Group("/teacher", _teacherMw()...)
-		_teacher.POST("/add-student-info", append(_teacherregisterMw(), demo.TeacherRegister)...)
+		_teacher.POST("/add-teacher-info", append(_teacherregisterMw(), demo.TeacherRegister)...)
 		_teacher.GET("/query", append(_teacherqueryMw(), demo.TeacherQuery)...)
 	}
 }

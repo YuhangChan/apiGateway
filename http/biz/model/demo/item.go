@@ -1257,7 +1257,7 @@ func (p *StudentServiceClient) StuQuery(ctx context.Context, req *QueryReq) (r *
 type TeacherService interface {
 	TeacherRegister(ctx context.Context, teacher *Teacher) (r *RegisterResp, err error)
 
-	TeacherQuery(ctx context.Context, req *QueryReq) (r *Student, err error)
+	TeacherQuery(ctx context.Context, req *QueryReq) (r *Teacher, err error)
 }
 
 type TeacherServiceClient struct {
@@ -1295,7 +1295,7 @@ func (p *TeacherServiceClient) TeacherRegister(ctx context.Context, teacher *Tea
 	}
 	return _result.GetSuccess(), nil
 }
-func (p *TeacherServiceClient) TeacherQuery(ctx context.Context, req *QueryReq) (r *Student, err error) {
+func (p *TeacherServiceClient) TeacherQuery(ctx context.Context, req *QueryReq) (r *Teacher, err error) {
 	var _args TeacherServiceTeacherQueryArgs
 	_args.Req = req
 	var _result TeacherServiceTeacherQueryResult
@@ -2136,7 +2136,7 @@ func (p *teacherServiceProcessorTeacherQuery) Process(ctx context.Context, seqId
 	iprot.ReadMessageEnd()
 	var err2 error
 	result := TeacherServiceTeacherQueryResult{}
-	var retval *Student
+	var retval *Teacher
 	if retval, err2 = p.handler.TeacherQuery(ctx, args.Req); err2 != nil {
 		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing TeacherQuery: "+err2.Error())
 		oprot.WriteMessageBegin("TeacherQuery", thrift.EXCEPTION, seqId)
@@ -2603,16 +2603,16 @@ func (p *TeacherServiceTeacherQueryArgs) String() string {
 }
 
 type TeacherServiceTeacherQueryResult struct {
-	Success *Student `thrift:"success,0,optional"`
+	Success *Teacher `thrift:"success,0,optional"`
 }
 
 func NewTeacherServiceTeacherQueryResult() *TeacherServiceTeacherQueryResult {
 	return &TeacherServiceTeacherQueryResult{}
 }
 
-var TeacherServiceTeacherQueryResult_Success_DEFAULT *Student
+var TeacherServiceTeacherQueryResult_Success_DEFAULT *Teacher
 
-func (p *TeacherServiceTeacherQueryResult) GetSuccess() (v *Student) {
+func (p *TeacherServiceTeacherQueryResult) GetSuccess() (v *Teacher) {
 	if !p.IsSetSuccess() {
 		return TeacherServiceTeacherQueryResult_Success_DEFAULT
 	}
@@ -2687,7 +2687,7 @@ ReadStructEndError:
 }
 
 func (p *TeacherServiceTeacherQueryResult) ReadField0(iprot thrift.TProtocol) error {
-	p.Success = NewStudent()
+	p.Success = NewTeacher()
 	if err := p.Success.Read(iprot); err != nil {
 		return err
 	}
