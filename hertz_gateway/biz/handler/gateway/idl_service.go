@@ -4,11 +4,18 @@ package gateway
 
 import (
 	"context"
+	"errors"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
-	idlManager "hertz.demo/biz/idl"
 	gateway "hertz.demo/biz/model/gateway"
+	"sync"
 )
+
+// ServiceNameMap global var
+var ServiceNameMap = make(map[string]gateway.Service)
+
+var mapMutex = &sync.Mutex{}
+var ioMutex = &sync.Mutex{}
 
 // AddService .
 // @router /add-service [POST]
@@ -21,10 +28,13 @@ func AddService(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(gateway.SuccessResp)
-	idlManager.AddService(req)
+	mapMutex.Lock()
+	defer mapMutex.Unlock()
+	if _, ok := ServiceNameMap[req.ServiceName]; !ok {
+		ServiceNameMap[req.ServiceName] = req
+	}
 
-	resp = &gateway.SuccessResp{
+	resp := &gateway.SuccessResp{
 		Success: true,
 		Message: "Add " + req.ServiceName + " success",
 	}
@@ -42,10 +52,11 @@ func DeleteService(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(gateway.SuccessResp)
-	idlManager.DeleteService(req.ServiceName)
+	mapMutex.Lock()
+	defer mapMutex.Unlock()
+	delete(ServiceNameMap, req.ServiceName)
 
-	resp = &gateway.SuccessResp{
+	resp := &gateway.SuccessResp{
 		Success: true,
 		Message: "Delete " + req.ServiceName + " success",
 	}
@@ -63,11 +74,13 @@ func UpdateService(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(gateway.SuccessResp)
+	mapMutex.Lock()
+	defer mapMutex.Unlock()
+	if _, ok := ServiceNameMap[req.ServiceName]; ok {
+		ServiceNameMap[req.ServiceName] = req
+	}
 
-	idlManager.UpdateService(req)
-
-	resp = &gateway.SuccessResp{
+	resp := &gateway.SuccessResp{
 		Success: true,
 		Message: "Update " + req.ServiceName + " success",
 	}
@@ -86,11 +99,15 @@ func GetService(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(gateway.Service)
+	mapMutex.Lock()
+	defer mapMutex.Unlock()
+	service, ok := ServiceNameMap[req.ServiceName]
+	if !ok {
+		err := errors.New("service not found")
+		panic(err)
+	}
 
-	resp = idlManager.GetService(req.ServiceName)
-
-	c.JSON(consts.StatusOK, resp)
+	c.JSON(consts.StatusOK, &service)
 }
 
 // ListService .
@@ -102,9 +119,14 @@ func ListService(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new([]*gateway.Service)
-	services := idlManager.GetAllService()
-	resp = &services
+	mapMutex.Lock()
+	defer mapMutex.Unlock()
 
-	c.JSON(consts.StatusOK, resp)
+	var services []*gateway.Service
+	for k := range ServiceNameMap {
+		service := ServiceNameMap[k]
+		services = append(services, &service)
+	}
+
+	c.JSON(consts.StatusOK, &services)
 }

@@ -49,37 +49,3 @@ func GetIdlContent(serviceName string) string {
 	}
 	return string(content)
 }
-
-func AddService(service gateway.Service) {
-	mapMutex.Lock()
-	defer mapMutex.Unlock()
-	if _, ok := ServiceNameMap[service.ServiceName]; !ok {
-		ServiceNameMap[service.ServiceName] = service
-	}
-}
-
-func DeleteService(serviceName string) {
-	mapMutex.Lock()
-	defer mapMutex.Unlock()
-	delete(ServiceNameMap, serviceName)
-}
-
-func UpdateService(service gateway.Service) {
-	mapMutex.Lock()
-	defer mapMutex.Unlock()
-	if _, ok := ServiceNameMap[service.ServiceName]; ok {
-		ServiceNameMap[service.ServiceName] = service
-	}
-}
-
-func GetAllService() []*gateway.Service {
-	// 返回所有的 service
-	var services []*gateway.Service
-	mapMutex.Lock()
-	defer mapMutex.Unlock()
-	for k := range ServiceNameMap {
-		service := ServiceNameMap[k]
-		services = append(services, &service)
-	}
-	return services
-}
